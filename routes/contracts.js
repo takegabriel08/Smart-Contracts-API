@@ -1,6 +1,5 @@
 import express from "express"
 import nedb from "nedb"
-import { v4 } from "uuid"
 
 const router = express.Router();
 
@@ -25,19 +24,10 @@ router.get('/', (req, res) => {
 
 // create contract
 router.post('/', (req, res) => {
-    const body = req.body
-    //to make sure that the id is unique and of uuid format 
-    const idRegex = '(.{8})-(.{4})-(.{4})-(.{4})-(.{12})'
-    if (body.id) {
-        body._id = body.id
-        delete body.id
-    }
-    if (!body._id || !new RegExp(idRegex, 'g').test(body._id)) {
-        body._id = v4()
-    }
+    const item = req.body
 
     //insert item 
-    db.insert(body, (err, element) => {
+    db.insert(item, (err, element) => {
         res.send(`Contract ${element.symbol} was inserted into database!`)
     }
     )
