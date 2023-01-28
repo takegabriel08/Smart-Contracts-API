@@ -56,4 +56,25 @@ router.delete('/:id', (req, res) => {
     })
 })
 
+router.patch('/:id', (req, res) => {
+    const { id } = req.params
+    const query = req.body
+
+    //unexpected logic:making the values of the object passed strings because 
+    // if id is passed as number, the getone route won't function anymore on that item
+    // this also has some setbacks because if in the update query we pass a new key to the item,
+    // we would need to add another kind of query to remove it later({ $unset: { x: "y" } })
+
+    const queryKeys = Object.keys(query)
+    let newQueryObj = {}
+    queryKeys.map(item => newQueryObj[`${item}`] = String(query[`${item}`]))
+
+    db.update({ id: id }, { $set: { ...newQueryObj } },
+        (err, numAffected, affectedDocuments, upsert) => {
+            console.log(err, numAffected, affectedDocuments, upsert)
+            if (err) res.send(err.message)
+            res.send(`The item with the id: ${id}, has been updated`)
+        });
+})
+
 export default router;
