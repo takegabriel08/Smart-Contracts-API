@@ -1,6 +1,5 @@
 import express from "express"
 import nedb from "nedb"
-import { v4 } from "uuid"
 
 const router = express.Router();
 
@@ -26,15 +25,6 @@ router.get('/', (req, res) => {
 // create contract
 router.post('/', (req, res) => {
     const body = req.body
-    //to make sure that the id is unique and of uuid format 
-    const idRegex = '(.{8})-(.{4})-(.{4})-(.{4})-(.{12})'
-    if (body.id) {
-        body._id = body.id
-        delete body.id
-    }
-    if (!body._id || !new RegExp(idRegex, 'g').test(body._id)) {
-        body._id = v4()
-    }
 
     //insert item 
     db.insert(body, (err, element) => {
@@ -45,11 +35,20 @@ router.post('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params
-    console.log('dadsa')
     db.findOne({ _id: id }, (err, data) => {
         if (data) res.send(data)
         if (err) res.send(error)
-        if (!data) res.send('404 not found')
+        if (!data) res.send('404 item not found')
+    })
+})
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params
+
+    db.remove({ _id: id }, (err, numRemoved) => {
+        if (numRemoved) res.send(`Items removed from database: ${numRemoved}`)
+        if (err) res.send(err)
+        if (!numRemoved) res.send('404 item not found')
     })
 })
 
