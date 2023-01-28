@@ -28,6 +28,10 @@ router.post('/', (req, res) => {
 
     //insert item 
     db.insert(item, (err, element) => {
+        if (err) {
+            res.send(err.message)
+            return
+        }
         res.send(`Contract ${element.symbol} was inserted into database!`)
     }
     )
@@ -35,9 +39,9 @@ router.post('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params
-    db.findOne({ _id: id }, (err, data) => {
+    db.findOne({ id: id }, (err, data) => {
         if (data) res.send(data)
-        if (err) res.send(error)
+        if (err) res.send(err)
         if (!data) res.send('404 item not found')
     })
 })
@@ -45,8 +49,8 @@ router.get('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     const { id } = req.params
 
-    db.remove({ _id: id }, (err, numRemoved) => {
-        if (numRemoved) res.send(`Items removed from database: ${numRemoved}`)
+    db.remove({ id: id }, (err, numRemoved) => {
+        if (numRemoved) res.send(`Items removed from database: ${numRemoved}/n Id of item deleted: ${id}`)
         if (err) res.send(err)
         if (!numRemoved) res.send('404 item not found')
     })
