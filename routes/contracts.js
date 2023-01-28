@@ -15,12 +15,14 @@ const db = new nedb('database.db')
 // })
 db.loadDatabase()
 
+// get all contracts
 router.get('/', (req, res) => {
     db.find({}, (err, data) => {
         res.json(data)
     })
 })
 
+// create contract
 router.post('/', (req, res) => {
     const body = req.body
     db.insert(body, (err, element) => {
