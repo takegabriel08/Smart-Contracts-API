@@ -24,10 +24,10 @@ router.get('/', (req, res) => {
 
 // create contract
 router.post('/', (req, res) => {
-    const body = req.body
+    const item = req.body
 
     //insert item 
-    db.insert(body, (err, element) => {
+    db.insert(item, (err, element) => {
         res.send(`Contract ${element.symbol} was inserted into database!`)
     }
     )
