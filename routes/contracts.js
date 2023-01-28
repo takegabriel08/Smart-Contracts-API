@@ -15,10 +15,20 @@ const db = new nedb('database.db')
 // })
 db.loadDatabase()
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
     db.find({}, (err, data) => {
         res.json(data)
     })
 })
+
+router.post('/', (req, res) => {
+    const body = req.body
+    db.insert(body, (err, element) => {
+        console.log(`New element inserted in database: ${JSON.stringify(element)}`)
+    }
+    )
+})
+
+
 
 export default router;
