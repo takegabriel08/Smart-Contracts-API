@@ -35,11 +35,20 @@ router.post('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params
-    console.log('dadsa')
     db.findOne({ _id: id }, (err, data) => {
         if (data) res.send(data)
         if (err) res.send(error)
-        if (!data) res.send('404 not found')
+        if (!data) res.send('404 item not found')
+    })
+})
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params
+
+    db.remove({ _id: id }, (err, numRemoved) => {
+        if (numRemoved) res.send(`Items removed from database: ${numRemoved}`)
+        if (err) res.send(err)
+        if (!numRemoved) res.send('404 item not found')
     })
 })
 
