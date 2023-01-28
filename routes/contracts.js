@@ -28,6 +28,7 @@ router.post('/', (req, res) => {
     )
 })
 
+// get one contract
 router.get('/:id', (req, res) => {
     const { id } = req.params
     db.findOne({ id: id }, (err, data) => {
@@ -37,6 +38,7 @@ router.get('/:id', (req, res) => {
     })
 })
 
+//delete one contract
 router.delete('/:id', (req, res) => {
     const { id } = req.params
 
@@ -47,12 +49,14 @@ router.delete('/:id', (req, res) => {
     })
 })
 
+// update contract information
 router.patch('/:id', (req, res) => {
     const { id } = req.params
     const query = req.body
 
     //unexpected logic:making the values of the object passed strings because 
-    // if id is passed as number, the getone route won't function anymore on that item
+    // if id is updated as number, the getOne route won't function anymore on that item
+    // because the db query will also look for the type
     // this also has some setbacks because if in the update query we pass a new key to the item,
     // we would need to add another kind of query to remove it later({ $unset: { x: "y" } })
 
