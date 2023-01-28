@@ -28,7 +28,17 @@ router.post('/', (req, res) => {
 
     //insert item 
     db.insert(item, (err, element) => {
-        res.send(`Contract ${element.symbol} was inserted into database!`)
+        try {
+            if (err.message == 'Can\'t insert key 9164dbf1-83bf-494b-b488-e217491, it violates the unique constraint') {
+                res.status(409)
+                res.send('Item already exists in database')
+            }
+            if (!err) {
+                res.send(`Contract ${element.symbol} was inserted into database!`)
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
     )
 })
